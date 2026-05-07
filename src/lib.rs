@@ -28,6 +28,12 @@
 /// The official base URL of the GBIF v1 API.
 pub const DEFAULT_BASE_URL: &str = "https://api.gbif.org/v1";
 
+/// Re-export of the `uuid::Uuid` type used throughout the generated clients
+/// (dataset keys, organization keys, network keys, …). Re-exported so
+/// downstream callers can construct/parse these IDs without a separate
+/// `uuid` crate dependency.
+pub use uuid::Uuid;
+
 /// Generated client for the GBIF Occurrence API.
 pub mod occurrence {
     include!(concat!(env!("OUT_DIR"), "/occurrence.rs"));
