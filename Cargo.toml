@@ -1,0 +1,35 @@
+[package]
+name = "gbif-api"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.88"
+description = "Rust client for the GBIF Occurrence and Species (Checklistbank) APIs, generated at build time from the official OpenAPI specifications published at techdocs.gbif.org."
+license = "MIT OR Apache-2.0"
+keywords = ["gbif", "biodiversity", "occurrence", "openapi"]
+categories = ["api-bindings", "science"]
+
+[dependencies]
+progenitor-client = "0.14"
+reqwest = { version = "0.13", default-features = false, features = ["json", "stream", "rustls", "http2", "charset"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", default-features = false, features = ["serde", "clock"] }
+uuid = { version = "1", features = ["serde", "v4"] }
+futures-core = "0.3"
+bytes = "1"
+regress = "0.10"
+base64 = "0.22"
+
+[build-dependencies]
+progenitor = "0.14"
+openapiv3 = "2"
+serde_json = "1"
+syn = { version = "2", features = ["full"] }
+prettyplease = "0.2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[[example]]
+name = "search_occurrences"
+path = "examples/search_occurrences.rs"
