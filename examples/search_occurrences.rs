@@ -16,17 +16,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let count = occ
         .get_occurrence_count(
             &empty,
-            None,                // basis_of_record
-            None,                // checklist_key
-            None,                // country
-            None,                // dataset_key
-            None,                // is_georeferenced
-            None,                // issue
-            None,                // protocol
-            None,                // publishing_country
-            Some("6"),           // taxon_key — kingdom Plantae
-            None,                // type_status
-            None,                // year
+            None,      // basis_of_record
+            None,      // checklist_key
+            None,      // country
+            None,      // dataset_key
+            None,      // is_georeferenced
+            None,      // issue
+            None,      // protocol
+            None,      // publishing_country
+            Some("6"), // taxon_key — kingdom Plantae
+            None,      // type_status
+            None,      // year
         )
         .await?
         .into_inner();
