@@ -5,6 +5,7 @@ edition = "2021"
 rust-version = "1.88"
 description = "Rust client for the GBIF Occurrence and Species (Checklistbank) APIs, generated at build time from the official OpenAPI specifications published at techdocs.gbif.org."
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/observ-ing/rust-gbif"
 keywords = ["gbif", "biodiversity", "occurrence", "openapi"]
 categories = ["api-bindings", "science"]
 
