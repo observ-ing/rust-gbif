@@ -13,17 +13,15 @@
 //! to [`occurrence::Client::new`] / [`checklistbank::Client::new`] to talk
 //! to a staging environment.
 //!
-//! ```no_run
-//! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = gbif_api::occurrence::Client::new("https://api.gbif.org/v1");
-//! let response = client.search_occurrence().limit(5).send().await?;
-//! println!("matched {} records", response.count.unwrap_or(0));
-//! # Ok(()) }
-//! ```
+//! See `examples/search_occurrences.rs` for a worked example of constructing
+//! the occurrence client and issuing a search query.
 
 #![allow(clippy::all)]
 #![allow(rustdoc::broken_intra_doc_links)]
 #![allow(rustdoc::bare_urls)]
+// progenitor embeds upstream JSON examples as fenced code blocks without a
+// language tag; rustdoc parses those as Rust and fires this lint.
+#![allow(rustdoc::invalid_rust_codeblocks)]
 
 /// The official base URL of the GBIF v1 API.
 pub const DEFAULT_BASE_URL: &str = "https://api.gbif.org/v1";

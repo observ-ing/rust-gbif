@@ -29,11 +29,10 @@ fn main() {
 }
 
 fn generate(name: &str, path: &str, out_dir: &str) {
-    let raw = fs::read_to_string(path)
-        .unwrap_or_else(|e| panic!("read {path}: {e}"));
+    let raw = fs::read_to_string(path).unwrap_or_else(|e| panic!("read {path}: {e}"));
 
-    let mut value: serde_json::Value = serde_json::from_str(&raw)
-        .unwrap_or_else(|e| panic!("parse {path}: {e}"));
+    let mut value: serde_json::Value =
+        serde_json::from_str(&raw).unwrap_or_else(|e| panic!("parse {path}: {e}"));
 
     // progenitor uses the openapiv3 crate, which targets OpenAPI 3.0.x.
     // The GBIF Occurrence spec advertises 3.1.0 but does not use any 3.1-only
@@ -52,8 +51,8 @@ fn generate(name: &str, path: &str, out_dir: &str) {
     collapse_to_single_media_type(&mut value);
     loosen_runtime_polymorphic_schemas(&mut value);
 
-    let spec: openapiv3::OpenAPI = serde_json::from_value(value)
-        .unwrap_or_else(|e| panic!("decode openapi {path}: {e}"));
+    let spec: openapiv3::OpenAPI =
+        serde_json::from_value(value).unwrap_or_else(|e| panic!("decode openapi {path}: {e}"));
 
     // The default `Positional` interface generates `client.method(arg, arg, ..)`.
     // The GBIF Occurrence search endpoint has 130+ parameters so callers will
@@ -65,13 +64,11 @@ fn generate(name: &str, path: &str, out_dir: &str) {
         .generate_tokens(&spec)
         .unwrap_or_else(|e| panic!("generate {name}: {e}"));
 
-    let ast = syn::parse2(tokens)
-        .unwrap_or_else(|e| panic!("syn parse {name}: {e}"));
+    let ast = syn::parse2(tokens).unwrap_or_else(|e| panic!("syn parse {name}: {e}"));
     let pretty = prettyplease::unparse(&ast);
 
     let out = Path::new(out_dir).join(format!("{name}.rs"));
-    fs::write(&out, pretty)
-        .unwrap_or_else(|e| panic!("write {}: {e}", out.display()));
+    fs::write(&out, pretty).unwrap_or_else(|e| panic!("write {}: {e}", out.display()));
 }
 
 /// A handful of GBIF parameters declare neither `schema` nor `content`, which
@@ -79,24 +76,27 @@ fn generate(name: &str, path: &str, out_dir: &str) {
 /// `schema: { type: string }` so generation can proceed.
 fn patch_malformed_parameters(spec: &mut serde_json::Value) {
     fn fix_param_list(params: &mut serde_json::Value) {
-        let Some(list) = params.as_array_mut() else { return };
+        let Some(list) = params.as_array_mut() else {
+            return;
+        };
         for p in list {
-            let Some(obj) = p.as_object_mut() else { continue };
+            let Some(obj) = p.as_object_mut() else {
+                continue;
+            };
             if obj.contains_key("$ref") {
                 continue;
             }
             if !obj.contains_key("schema") && !obj.contains_key("content") {
-                obj.insert(
-                    "schema".into(),
-                    serde_json::json!({ "type": "string" }),
-                );
+                obj.insert("schema".into(), serde_json::json!({ "type": "string" }));
             }
         }
     }
 
     if let Some(paths) = spec.get_mut("paths").and_then(|v| v.as_object_mut()) {
         for item in paths.values_mut() {
-            let Some(item_obj) = item.as_object_mut() else { continue };
+            let Some(item_obj) = item.as_object_mut() else {
+                continue;
+            };
             if let Some(p) = item_obj.get_mut("parameters") {
                 fix_param_list(p);
             }
@@ -225,9 +225,13 @@ fn stub_missing_schemas(spec: &mut serde_json::Value) {
 /// (or bytes) response.
 fn patch_empty_media_types(spec: &mut serde_json::Value) {
     fn fix_content(content: &mut serde_json::Value) {
-        let Some(map) = content.as_object_mut() else { return };
+        let Some(map) = content.as_object_mut() else {
+            return;
+        };
         for media in map.values_mut() {
-            let Some(obj) = media.as_object_mut() else { continue };
+            let Some(obj) = media.as_object_mut() else {
+                continue;
+            };
             if !obj.contains_key("schema") {
                 obj.insert("schema".into(), serde_json::json!({}));
             }
@@ -238,7 +242,9 @@ fn patch_empty_media_types(spec: &mut serde_json::Value) {
         return;
     };
     for item in paths.values_mut() {
-        let Some(item_obj) = item.as_object_mut() else { continue };
+        let Some(item_obj) = item.as_object_mut() else {
+            continue;
+        };
         for method in [
             "get", "post", "put", "delete", "patch", "head", "options", "trace",
         ] {
@@ -312,7 +318,9 @@ fn patch_missing_path_params(spec: &mut serde_json::Value) {
             continue;
         }
 
-        let Some(item_obj) = item.as_object_mut() else { continue };
+        let Some(item_obj) = item.as_object_mut() else {
+            continue;
+        };
         let shared = item_obj
             .get("parameters")
             .and_then(|v| v.as_array())
@@ -375,7 +383,9 @@ fn loosen_runtime_polymorphic_schemas(spec: &mut serde_json::Value) {
 /// `text/xml`). Collapse each content map to a single entry, preferring JSON.
 fn collapse_to_single_media_type(spec: &mut serde_json::Value) {
     fn pick(content: &mut serde_json::Value) {
-        let Some(map) = content.as_object_mut() else { return };
+        let Some(map) = content.as_object_mut() else {
+            return;
+        };
         if map.len() <= 1 {
             return;
         }
@@ -395,7 +405,9 @@ fn collapse_to_single_media_type(spec: &mut serde_json::Value) {
         return;
     };
     for item in paths.values_mut() {
-        let Some(item_obj) = item.as_object_mut() else { continue };
+        let Some(item_obj) = item.as_object_mut() else {
+            continue;
+        };
         for method in [
             "get", "post", "put", "delete", "patch", "head", "options", "trace",
         ] {
