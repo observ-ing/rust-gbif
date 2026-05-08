@@ -10,8 +10,8 @@
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let occ = gbif_api::occurrence::Client::new(gbif_api::DEFAULT_BASE_URL);
-    let empty = gbif_api::occurrence::types::CountQuery(Default::default());
+    let occ = gbif::occurrence::Client::new(gbif::DEFAULT_BASE_URL);
+    let empty = gbif::occurrence::types::CountQuery(Default::default());
 
     let count = occ
         .get_occurrence_count(
