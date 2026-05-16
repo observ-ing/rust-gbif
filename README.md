@@ -4,10 +4,6 @@ Rust client for the [GBIF](https://www.gbif.org/) Occurrence and Species
 (Checklistbank) APIs, generated at build time from the official OpenAPI
 specifications published at <https://techdocs.gbif.org/openapi/>.
 
-[![CI](https://github.com/observ-ing/rust-gbif/actions/workflows/ci.yml/badge.svg)](https://github.com/observ-ing/rust-gbif/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/gbif.svg)](https://crates.io/crates/gbif)
-[![Docs.rs](https://docs.rs/gbif/badge.svg)](https://docs.rs/gbif)
-
 ## Modules
 
 - [`occurrence`](https://docs.rs/gbif/latest/gbif/occurrence/) — the GBIF
